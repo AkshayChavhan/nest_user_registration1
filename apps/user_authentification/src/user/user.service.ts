@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import mongoose from 'mongoose';
@@ -20,4 +20,24 @@ export class UserService {
         const res = await this.userModel.create(user);
         return res;
     }
+
+    async findById(id:string): Promise<User> {
+        const user = await this.userModel.findById(id);
+
+        if(!user) {
+            throw new NotFoundException("User not registered")
+        }
+        return user;
+    }
+
+    async updateById(id:string , user:User): Promise<User> {
+        return await this.userModel.findByIdAndUpdate(id,user , {
+            new:true ,
+            runValidators:true
+        });
+    }
+
+    // async deleteById(id:string): Promise<User> {
+    //     return await this.userModel.findByIdAndDelete(id);
+    // }
 }
