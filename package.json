@@ -3,9 +3,15 @@
     "turbo": "^1.11.2"
   },
   "scripts": {
-    "dev":"turbo run dev"
+    "dev": "turbo run dev",
+    "build": "turbo run build"
   },
-  "workspaces":[
+  "workspaces": [
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "@nestjs/config": "^3.1.1",
+    "@nestjs/mongoose": "^10.0.2",
+    "mongoose": "^8.0.3"
+  }
 }
