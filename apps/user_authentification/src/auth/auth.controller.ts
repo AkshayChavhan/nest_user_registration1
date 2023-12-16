@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
@@ -33,18 +33,17 @@ export class AuthController {
   //     "password": "Akshay@6"
   // }
   @Post('/login')
-  login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+  login(@Body() loginDto: LoginDto): Promise<{ token: string , mobileNumber: string }> {
     return this.authService.login(loginDto);
   }
 
-
+  
   // http://localhost:3000/api/auth/profile
   // method : -GET
   // Add bearing token
   @Get('/profile')
   @UseGuards(AuthGuard())
-  getProfileDetail(@Request() req): Promise<{ user: any }> {
-    const userId = req.user.id;
-    return this.authService.getProfileDetail(userId);
+  getProfileDetail(@Query('mobileNumber') mobileNumber: string): Promise<{ user: any }> {
+    return this.authService.getProfileDetail(mobileNumber);
   }
 }
