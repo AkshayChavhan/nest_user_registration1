@@ -7,14 +7,10 @@ export const userLogin = createAsyncThunk(
     async ({ mobileNumber, password }, { rejectWithValue }) => {
         try {
             const { data } = await API.post("/auth/login", { mobileNumber, password });
-            console.log('data login => ', data);
-            //store token
             if (data.token) {
-                // alert(data.message);
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("mobileNumber", data.mobileNumber)
-                toast.success(data.message);
-                window.location.replace("/profile");
+                window.location.replace("/");
             }
             return data;
         } catch (error) {
@@ -40,21 +36,19 @@ export const userRegister = createAsyncThunk(
         { rejectWithValue }
     ) => {
         try {
-            console.log("firstName,lastName,mobileNumber,password => ", firstName, lastName, mobileNumber, password)
             const { data } = await API.post("/auth/signup", {
                 firstName,
                 lastName,
                 mobileNumber,
                 password
             });
-            console.log("API hit data => ", data)
             if (data?.token) {
                 alert("User Registerd Successfully");
                 window.location.replace("/login");
             }
         } catch (error) {
-            console.log(error);
             if (error.response && error.response.data.message) {
+                alert(error);
                 return rejectWithValue(error.response.data.message);
             } else {
                 return rejectWithValue(error.message);

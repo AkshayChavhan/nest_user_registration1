@@ -1,29 +1,29 @@
 // UserProfile.js
 
-import React, { useEffect } from 'react';
-import { useSelector , useDispatch } from 'react-redux';
-import { handleCurrentUser } from '../services/authService';
-import './UserProfile.css'; 
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { handleCurrentUser } from "../services/authService";
+import "./UserProfile.css";
 import { userLogout } from "../redux/features/auth/authSlice";
-
+import { Navigate } from "react-router-dom";
 
 function UserProfile() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.auth);
 
-
   const handleLogout = () => {
     dispatch(userLogout());
+    window.location.replace("/login");
   };
 
-
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      window.location.replace("/login");
+    }
     if (data.user) {
       handleCurrentUser(data.user);
     }
   }, []);
-
-  
 
   return (
     <div className="user-profile-container">

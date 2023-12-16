@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import "./Signup.css";
 import { handleRegister } from "../services/authService";
+import { Link } from "react-router-dom";
 
 function Signup() {
   const {
@@ -64,7 +65,10 @@ function Signup() {
           />
           {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Sign Up</button>
+        <div className="center">
+          <Link to="/login">Log in here.</Link>
+        </div>
       </form>
     </div>
   );
