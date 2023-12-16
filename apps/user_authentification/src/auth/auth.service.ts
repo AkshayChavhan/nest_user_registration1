@@ -18,11 +18,11 @@ export class AuthService {
     ) { }
 
     async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
-        const { firstName ,lastName ,mobileNumber, password } = signUpDto;
+        const { firstName, lastName, mobileNumber, password } = signUpDto;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await this.userModel.create({
-            firstName ,
+            firstName,
             lastName,
             mobileNumber,
             password: hashedPassword,
@@ -33,7 +33,7 @@ export class AuthService {
         return { token };
     }
 
-    async login(loginDto: LoginDto): Promise<{ token: string }> {
+    async login(loginDto: LoginDto): Promise<{ token: string; mobileNumber: string }> {
         const { mobileNumber, password } = loginDto;
         const user = await this.userModel.findOne({ mobileNumber });
 
@@ -49,16 +49,17 @@ export class AuthService {
 
         const token = this.jwtService.sign({ id: user._id });
 
-        return { token };
+        return { token, mobileNumber: user.mobileNumber };
     }
 
-    async getProfileDetail(userId: string): Promise<{ user: any }> {
-        const user = await this.userModel.findById(userId, { password: 0 }).exec();
+    async getProfileDetail(mobileNumber: string): Promise<{ user: any }> {
+        const user = await this.userModel.findOne({ mobileNumber }, { password: 0 }).exec();
         console.log("user => ", user);
-        
+      
         if (!user) {
-            throw new UnauthorizedException('User not found');
+          throw new UnauthorizedException('User not found');
         }
         return { user };
-    }
+      }
+      
 }
