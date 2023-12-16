@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { ProfileDto } from './dto/profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -49,5 +50,15 @@ export class AuthService {
         const token = this.jwtService.sign({ id: user._id });
 
         return { token };
+    }
+
+    async getProfileDetail(userId: string): Promise<{ user: any }> {
+        const user = await this.userModel.findById(userId, { password: 0 }).exec();
+        console.log("user => ", user);
+        
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+        return { user };
     }
 }
